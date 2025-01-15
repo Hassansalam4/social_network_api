@@ -1,19 +1,19 @@
 // ObjectId() method for converting studentId string into an ObjectId for querying database
 import { ObjectId } from 'mongodb';
-import { Student, Course } from '../models/index.js';
+import { Users, Thought,  } from '../models/index.js';
 import { Request, Response } from 'express';
 
 // TODO: Create an aggregate function to get the number of students overall
 
 export const headCount = async () => {
     // Your code here
-    const numberOfStudents = await Student.aggregate()
-    return numberOfStudents;
+    const numberOfUsers = await Users.aggregate()
+    return numberOfUsers.length;
 }
 
 // Aggregate function for getting the overall grade using $avg
-export const grade = async (studentId: string) =>
-    Student.aggregate([
+export const grade = async (UsersId: string) =>
+    Users.aggregate([
         // TODO: Ensure we include only the student who can match the given ObjectId using the $match operator
     {
         // Your code here

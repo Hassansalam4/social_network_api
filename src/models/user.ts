@@ -1,24 +1,25 @@
 import { Schema, model, type Document } from 'mongoose';
 
-interface ICourse extends Document {
-    name: string,
-    inPerson: boolean,
-    start: Date,
+interface IUsers extends Document {
+    username: string,
+    email: string,
+    thought: Date,
     end: Date,
-    students: Schema.Types.ObjectId[]
+    friends: Schema.Types.ObjectId[]
 }
 
-const courseSchema = new Schema<ICourse>(
+const UserSchema = new Schema<IUsers>(
     {
-        name: {
+        username: {
             type: String,
             required: true,
         },
-        inPerson: {
-            type: Boolean,
-            default: true,
+        friends: {
+            type: [Schema.Types.ObjectId],
+            ref: 'User',
+            default: [],
         },
-        start: {
+        thought: {
             type: Date,
             default: Date.now(),
         },
@@ -27,10 +28,10 @@ const courseSchema = new Schema<ICourse>(
             // Sets a default value of 12 weeks from now
             default: () => new Date(+new Date() + 84 * 24 * 60 * 60 * 1000),
         },
-        students: [
+        email: [
             {
                 type: Schema.Types.ObjectId,
-                ref: 'student',
+                ref: 'User',
             },
         ],
     },
@@ -42,6 +43,10 @@ const courseSchema = new Schema<ICourse>(
     },
 );
 
-const Course = model<ICourse>('Course', courseSchema);
+interface IUsers extends Document {
+    // Define the properties of the ICourse interface here
+}
 
-export default Course;
+const User= model<IUsers>('User', UserSchema);
+
+export default User;
