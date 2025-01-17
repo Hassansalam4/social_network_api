@@ -1,23 +1,22 @@
-// src/routes/userRoutes.ts
-import express from 'express';
+import { Router } from 'express';
+
+const router = Router();
+
 import {
-  getUsers,
+  getAllUsers,
+  getUserById,
   createUser,
   updateUser,
   deleteUser,
   addFriend,
   removeFriend,
-} from '../controllers/userController';
+} from '../../controllers/userController.js';
 
-const router = express.Router();
+// Define routes for users
+router.route('/').get(getAllUsers).post(createUser);
 
-router.get('/', getUsers);
-router.post('/', createUser);
-router.put('/:userId', updateUser);
-router.delete('/:userId', deleteUser);
-router.post('/:userId/friends/:friendId', addFriend);
-router.delete('/:userId/friends/:friendId', removeFriend);
+router.route('/:id').get(getUserById).put(updateUser).delete(deleteUser);
 
-export default router;
+router.route('/:userId/friends/:friendId').post(addFriend).delete(removeFriend);
 
-
+export {router as userRouter};

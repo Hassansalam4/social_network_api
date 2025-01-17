@@ -1,19 +1,29 @@
-import { Thought } from '../models/index.js';
-import { getUsers } from './index.js';
-import process from 'process';
+import { User, Thought } from '../models/index.js';
+import db from '../config/connection.js';
 
 const cleanDB = async (): Promise<void> => {
   try {
-    await getUsers.deleteMany({});
+    // Connect to the database
+    const connection = await db();
+    console.log('Database connected. Cleaning collections...');
+
+    // Delete all users
+    await User.deleteMany({});
     console.log('User collection cleaned.');
 
+    // Delete all thoughts
     await Thought.deleteMany({});
-    console.log('thoughts collection cleaned.');
+    console.log('Thought collection cleaned.');
 
+    // Close the database connection
+    await connection.close();
+    console.log('Database connection closed.');
+
+    process.exit(0);
   } catch (err) {
     console.error('Error cleaning collections:', err);
     process.exit(1);
   }
 };
-export { Thought };
+
 export default cleanDB;

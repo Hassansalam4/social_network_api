@@ -1,13 +1,13 @@
-// src/routes/reactionRoutes.ts
-import express from 'express';
-import {
-  createReaction,
-  deleteReaction,
-} from '../controllers/reactionController';
+import { Router } from 'express';
+import { userRouter }from './UsersRoutes.js';
+import {thoughtRouter}  from './thoughts-Routes.js';
 
-const router = express.Router();
 
-router.post('/:thoughtId/reactions', createReaction);
-router.delete('/:thoughtId/reactions/:reactionId', deleteReaction);
+const router = Router();
+
+// Mount the thoughtRouter on the '/thoughts' route
+router.use('/thoughts', thoughtRouter);
+
+router.use('/users', userRouter);
 
 export default router;

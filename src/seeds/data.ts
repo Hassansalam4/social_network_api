@@ -1,79 +1,45 @@
-import {Types, types} from "mongoose";
+import {Types} from "mongoose";
 
-const names = [ "sample 1, sample 2 , sample 3, sample 4, sample 5"]
-;
 //   thoughts sample
-const thoughtsMessages = [
-  'i love my wife',
-  'Find My Phone',
 
-  'Monopoly Money Manager',
-  'Movie trailers',
-  'Hello world',
-  'Stupid Social Media App',
-  'Notes',
-  'Messages',
-  'Email',
-  'Calendar',
+const reactionBodies = [
+  'Like',
+  'Love',
+  'Haha',
+  'Wow',
+  'Sad',
+  'Angry',
 ];
 
-// reaction samples
-const reactions = ['👍', '👎', '❤️', '😂', '😯', '😢', '😡'];
-const reactionBodies = ["awesome", "my iphone 14", "fake money", "jurassic park", "hello world"];
+const usernames = ["username1", "username2", "username3"]; // Define the 'usernames' array
 
-// Define the 'usernames' array
-const usernames = ["username1", "username2", "username3"];
+// function to get a random item from any array
+export const getRandomArrItem = <T>(arr: T[]): T =>
+  arr[Math.floor(Math.random() * arr.length)];
 
-// Get a random item given an array
-export const getRandomArrItem = (arr: any) => arr[Math.floor(Math.random() * arr.length)];
+// create test users (test1 to test5)
+export const getUsers = () => {
+  return usernames.map((username) => ({
+    _id: new Types.ObjectId(),
+    username,
+    email: `${username}@mail.com`,
+    thoughts: [],
+    friends: [],
+  }));
+};
 
-// Gets a random thought from the thoughtsMessages array
-export const getRandomName =() =>
-  `${getRandomArrItem(names)} ${getRandomArrItem(names)}`;
+// create random thoughts for users
+export const getRandomThoughts = (
+  numThoughts: number,
+  userIds: Types.ObjectId[]
+) => {
+  const thought: { thoughtText: any; username: string; userId: Types.ObjectId; reactions: { reactionId: Types.ObjectId; reactionBody: string; username: string; createdAt: Date; }[]; createdAt: Date; }[] = [];
 
-// Function to generate random assignments that we can add to student object.
-export const getRandomAssignments = (int: number) => {
-  const results: any[] = [];
-  for (let i = 0; i < int; i++) {
-    results.push({
-      name: getRandomArrItem(thoughtsMessages),
-      score: Math.floor(Math.random() * (99 - 70 + 1) + 70),
-    });
-  }
-  const getRandomThoughts = (
-    numThoughts: number,
-    userIds: Types.ObjectId[]
-  ) => {
-    const thoughts = [];
-  
-    for (let i = 0; i < numThoughts; i++) {
-      const randomUser = getRandomArrItem(userIds);
-  
-      thoughts.push({
-        thoughtText: getRandomArrItem(thoughts),
-        username: usernames[userIds.indexOf(randomUser)],
-        userId: randomUser,
-        reactions: [
-          {
-            reactionId: new Types.ObjectId(),
-            reactionBody: getRandomArrItem(reactionBodies),
-            username: getRandomArrItem(usernames),
-            createdAt: new Date(),
-          },
-        ],
-        createdAt: new Date(),
-      });
-    }
-  };
-  
-  const thoughts = [];
-  const userIds: Types.ObjectId[] = []; // Declare the 'userIds' variable
-  
-  for (let i = 0; i < thoughts; i++) {
+  for (let i = 0; i < numThoughts; i++) {
     const randomUser = getRandomArrItem(userIds);
-  
-    thoughts.push({
-      thoughtText: getRandomArrItem(thoughts),
+
+    thought.push({
+      thoughtText: getRandomArrItem(thought),
       username: usernames[userIds.indexOf(randomUser)],
       userId: randomUser,
       reactions: [
@@ -87,6 +53,6 @@ export const getRandomAssignments = (int: number) => {
       createdAt: new Date(),
     });
   }
-  
-  return thoughts;
+
+  return thought;
 };

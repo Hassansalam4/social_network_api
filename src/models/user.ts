@@ -1,52 +1,48 @@
-import { Schema, model, type Document } from 'mongoose';
+import { Schema, model, type Document } from "mongoose";
 
-interface IUsers extends Document {
-    username: string,
-    email: string,
-    thought: Date,
-    end: Date,
-    friends: Schema.Types.ObjectId[]
+interface IUser extends Document {
+    username: string;
+    email: string;
+    thoughts: Schema.Types.ObjectId[];
+    friends: Schema.Types.ObjectId[];
+    friendCount?: number;
 }
 
-const UserSchema = new Schema<IUsers>(
+const userSchema = new Schema<IUser>(
     {
-        username: {
-            type: String,
-            required: true,
+        username: { 
+            type: String, 
+            unique: true, 
+            required: true, 
+            trim: true 
         },
-        friends: {
-            type: [Schema.Types.ObjectId],
-            ref: 'User',
-            default: [],
+        email: { 
+            type: String, 
+            unique: true, 
+            required: true, 
+            match: [/.+@.+\..+/, 'Must match a valid email address!'] 
         },
-        thought: {
-            type: Date,
-            default: Date.now(),
-        },
-        end: {
-            type: Date,
-            // Sets a default value of 12 weeks from now
-            default: () => new Date(+new Date() + 84 * 24 * 60 * 60 * 1000),
-        },
-        email: [
-            {
-                type: Schema.Types.ObjectId,
-                ref: 'User',
-            },
-        ],
+        thoughts: [{ 
+            type: Schema.Types.ObjectId, 
+            ref: 'Thought' 
+        }],
+        friends: [{ 
+            type: Schema.Types.ObjectId, 
+            ref: 'User' 
+        }],
     },
     {
         toJSON: {
             virtuals: true,
         },
-        timestamps: true
-    },
+        id: false,
+    }
 );
 
-interface IUsers extends Document {
-    // Define the properties of the ICourse interface here
-}
+// Virtual for friend count
+userSchema.virtual('friendCount').get(function () {
+    return this.friends.length;
+});
 
-const User= model<IUsers>('User', UserSchema);
-
+const User = model<IUser>('User', userSchema);
 export default User;
